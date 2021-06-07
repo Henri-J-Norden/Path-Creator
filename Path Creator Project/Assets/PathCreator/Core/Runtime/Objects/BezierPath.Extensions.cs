@@ -107,7 +107,7 @@ namespace PathCreation
     {
       var bezierPath = pathCreator.bezierPath;
 
-      // Trying to find any duplicates and remote it segment if found
+      // Trying to find any duplicates and remove it segment if found
       for(int i = 0; i < bezierPath.NumPoints; i++)
       {
         var point = pathCreator.transform.TransformPoint(bezierPath.GetPoint(i));
