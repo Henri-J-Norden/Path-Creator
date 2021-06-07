@@ -105,6 +105,8 @@ namespace PathCreation
 
     public void EncapsulatePath(PathCreator pathCreator)
     {
+      var bezierPath = pathCreator.bezierPath;
+
       if(!isCleared)
       {
         Vector3 lastAnchorSecondControl = points[points.Count - 1];
@@ -118,12 +120,13 @@ namespace PathCreation
         perAnchorNormalsAngle.Clear();
       }
 
-      var bezierPath = pathCreator.bezierPath;
       for(int i = 0; i < bezierPath.NumPoints; i++)
       {
+        var point = pathCreator.transform.TransformPoint(bezierPath.GetPoint(i));
+
         if(!isCleared)
         {
-          points.Add(pathCreator.transform.TransformPoint(bezierPath.GetPoint(i)));
+          points.Add(point);
 
           if(i == 1)
           {
@@ -138,7 +141,7 @@ namespace PathCreation
         }
         else
         {
-          SetPoint(i, pathCreator.transform.TransformPoint(bezierPath.GetPoint(i)));
+          SetPoint(i, point);
         }
 
         if(isCleared && i == 3)
@@ -161,6 +164,25 @@ namespace PathCreation
       }
 
       NotifyPathModified();
+    }
+
+    public void EncapsulatePathWithoutDuplicates(PathCreator pathCreator)
+    {
+      var bezierPath = pathCreator.bezierPath;
+
+      // Trying to find any duplicates and remove it segment if found
+      for(int i = 0; i < bezierPath.NumPoints; i++)
+      {
+        var point = pathCreator.transform.TransformPoint(bezierPath.GetPoint(i));
+        var epsilon = 0.1f;
+
+        if(Vector3.Distance(point, this.GetPoint(this.NumPoints - 1)) < epsilon)
+        {
+          bezierPath.DeleteSegment(0);
+        }
+      }
+
+      this.EncapsulatePath(pathCreator);
     }
   }
 }
