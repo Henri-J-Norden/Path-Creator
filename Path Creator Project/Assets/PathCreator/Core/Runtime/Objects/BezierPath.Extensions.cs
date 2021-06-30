@@ -163,6 +163,8 @@ namespace PathCreation
         }
       }
 
+      pathCreator.EditorData.VertexPathSettingsChanged();
+
       NotifyPathModified();
     }
 
