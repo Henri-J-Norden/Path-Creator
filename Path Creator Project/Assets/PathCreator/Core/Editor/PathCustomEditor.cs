@@ -17,33 +17,50 @@
 ///
 using PathCreation;
 
+using UnityEditor;
+
+using UnityEngine;
+
 namespace PathCreationEditor
 {
-  public abstract class PathEditor<T> : PathEditor where T: PathCreator
+  public abstract class PathCustomEditor : Editor
   {
-    public virtual T pathCreator => target as T;
-    public virtual VertexPath path => pathCreator.path;
+    public virtual PathCreator pathCreator {get; protected set;}
+    public virtual VertexPath path => pathCreator?.path;
 
     protected abstract void OnPathUpdated();
 
     protected virtual void OnEnable()
     {
-      Subscribe();
+      FindPathCreator();
+
+      if(pathCreator != null)
+      {
+        Subscribe();
+      }
     }
 
     protected virtual void OnDisable()
     {
-      Unsubscribe();
+      if(pathCreator != null)
+      {
+        Unsubscribe();
+      }
     }
 
-    private void Subscribe()
+    protected virtual void Subscribe()
     {
       pathCreator.pathUpdated += OnPathUpdated;
     }
 
-    private void Unsubscribe()
+    protected virtual void Unsubscribe()
     {
       pathCreator.pathUpdated -= OnPathUpdated;
+    }
+
+    protected virtual void FindPathCreator()
+    {
+      pathCreator = (target as MonoBehaviour)?.GetComponent<PathCreator>();
     }
   }
 }
