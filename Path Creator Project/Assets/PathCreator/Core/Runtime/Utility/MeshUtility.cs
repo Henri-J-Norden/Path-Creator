@@ -54,8 +54,8 @@ namespace PathCreation.Utility
 
         // Find position to left and right of current path vertex
         Vector3 point = useLocal ? path.localPoints[i] : path.GetPoint(i);
-        Vector3 vertSideA = path.GetPoint(i) - localRight * Mathf.Abs(roadWidth);
-        Vector3 vertSideB = path.GetPoint(i) + localRight * Mathf.Abs(roadWidth);
+        Vector3 vertSideA = point - localRight * Mathf.Abs(roadWidth);
+        Vector3 vertSideB = point + localRight * Mathf.Abs(roadWidth);
 
         // Add top of road vertices
         verts[vertIndex + 0] = vertSideA;
