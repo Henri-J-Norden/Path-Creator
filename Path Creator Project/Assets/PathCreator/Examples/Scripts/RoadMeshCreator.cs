@@ -51,14 +51,16 @@ namespace PathCreation.Examples {
             int[] sidesTriangleMap = { 4, 6, 14, 12, 4, 14, 5, 15, 7, 13, 15, 5 };
 
             bool usePathNormals = !(path.space == PathSpace.xyz && flattenSurface);
+            bool useLocal = transform.parent != null;
 
             for (int i = 0; i < path.NumPoints; i++) {
                 Vector3 localUp = (usePathNormals) ? Vector3.Cross (path.GetTangent (i), path.GetNormal (i)) : path.up;
                 Vector3 localRight = (usePathNormals) ? path.GetNormal (i) : Vector3.Cross (localUp, path.GetTangent (i));
 
                 // Find position to left and right of current path vertex
-                Vector3 vertSideA = path.GetPoint (i) - localRight * Mathf.Abs (roadWidth);
-                Vector3 vertSideB = path.GetPoint (i) + localRight * Mathf.Abs (roadWidth);
+                Vector3 point = useLocal ? path.localPoints[i] : path.GetPoint (i);
+                Vector3 vertSideA = point - localRight * Mathf.Abs (roadWidth);
+                Vector3 vertSideB = point + localRight * Mathf.Abs (roadWidth);
 
                 // Add top of road vertices
                 verts[vertIndex + 0] = vertSideA;
@@ -122,11 +124,10 @@ namespace PathCreation.Examples {
 
             if (meshHolder == null) {
                 meshHolder = new GameObject ("Road Mesh Holder");
+                meshHolder.transform.rotation = Quaternion.identity;
+                meshHolder.transform.position = Vector3.zero;
+                meshHolder.transform.localScale = Vector3.one;
             }
-
-            meshHolder.transform.rotation = Quaternion.identity;
-            meshHolder.transform.position = Vector3.zero;
-            meshHolder.transform.localScale = Vector3.one;
 
             // Ensure mesh renderer and filter components are assigned
             if (!meshHolder.gameObject.GetComponent<MeshFilter> ()) {

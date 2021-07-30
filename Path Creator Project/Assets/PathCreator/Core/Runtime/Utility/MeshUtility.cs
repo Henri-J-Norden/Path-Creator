@@ -23,7 +23,7 @@ namespace PathCreation.Utility
 {
   public static partial class MeshUtility
   {
-    public static void CreateRoadMesh(Mesh mesh, VertexPath path, float roadWidth, float thickness, bool flattenSurface)
+    public static void CreateRoadMesh(Mesh mesh, VertexPath path, Transform transform, float roadWidth, float thickness, bool flattenSurface)
     {
       Vector3[] verts = new Vector3[path.NumPoints * 8];
       Vector2[] uvs = new Vector2[verts.Length];
@@ -45,6 +45,7 @@ namespace PathCreation.Utility
       int[] sidesTriangleMap = { 4, 6, 14, 12, 4, 14, 5, 15, 7, 13, 15, 5 };
 
       bool usePathNormals = !(path.space == PathSpace.xyz && flattenSurface);
+      bool useLocal = transform.parent != null;
 
       for(int i = 0; i < path.NumPoints; i++)
       {
@@ -52,6 +53,7 @@ namespace PathCreation.Utility
         Vector3 localRight = (usePathNormals) ? path.GetNormal(i) : Vector3.Cross(localUp, path.GetTangent(i));
 
         // Find position to left and right of current path vertex
+        Vector3 point = useLocal ? path.localPoints[i] : path.GetPoint(i);
         Vector3 vertSideA = path.GetPoint(i) - localRight * Mathf.Abs(roadWidth);
         Vector3 vertSideB = path.GetPoint(i) + localRight * Mathf.Abs(roadWidth);
 
