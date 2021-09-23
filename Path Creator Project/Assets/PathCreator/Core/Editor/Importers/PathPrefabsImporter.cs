@@ -49,21 +49,24 @@ namespace PathCreationEditor
 
               if(PathDataContainer.GetData().ContainsKey(key))
               {
-                var data = PathDataContainer.GetData()[key];
+                var pathData = PathDataContainer.GetData()[key];
 
-                pathCreator.bezierPath = new PathCreation.BezierPath(
-                  PathDataContainer.GetPoints(data),
-                  pathCreator.bezierPath.IsClosed,
-                  pathCreator.bezierPath.Space,
-                  pathCreator.bezierPath.ControlPointMode,
-                  PathDataContainer.GetNormals(data).ToList()
-                );
+                foreach(var data in pathData)
+                {
+                  pathCreator.bezierPath = new PathCreation.BezierPath(
+                    PathDataContainer.GetPoints(data),
+                    pathCreator.bezierPath.IsClosed,
+                    pathCreator.bezierPath.Space,
+                    pathCreator.bezierPath.ControlPointMode,
+                    PathDataContainer.GetNormals(data).ToList()
+                  );
 
-                pathCreator.bezierPath.FlipNormals = false;
-                pathCreator.bezierPath.GlobalNormalsAngle = 90;
-                pathCreator.bezierPath.NotifyPathModified();
+                  pathCreator.bezierPath.FlipNormals = false;
+                  pathCreator.bezierPath.GlobalNormalsAngle = 90;
+                  pathCreator.bezierPath.NotifyPathModified();
 
-                EditorUtility.SetDirty(root);
+                  EditorUtility.SetDirty(root);
+                }
 
                 Logs.EditorLog(
                   string.Join(

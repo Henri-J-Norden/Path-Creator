@@ -25,16 +25,16 @@ namespace PathCreationEditor
 {
   public class PathDataContainer
   {
-    private static Dictionary<string, PathData> data = new Dictionary<string, PathData>();
+    private static Dictionary<string, PathData[]> data = new Dictionary<string, PathData[]>();
 
-    public static Dictionary<string, PathData> GetData()
+    public static Dictionary<string, PathData[]> GetData()
     {
       return PathDataContainer.data;
     }
 
-    public static void SaveData(PathData data)
+    public static void SaveData(PathData[] data)
     {
-      PathDataContainer.data[data.name] = data;
+      PathDataContainer.data[data[0].name] = data;
     }
 
     public static IEnumerable<Vector3> GetPoints(PathData pathData)

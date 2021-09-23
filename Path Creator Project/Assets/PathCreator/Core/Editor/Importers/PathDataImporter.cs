@@ -49,10 +49,7 @@ namespace PathCreationEditor
           var serializedData = AssetDatabase.LoadAssetAtPath<TextAsset>(path).text;
           var deserializedData = Mempic.Yaml.Deserialize<PathData[]>(serializedData);
 
-          foreach(var data in deserializedData)
-          {
-            PathDataContainer.SaveData(data);
-          }
+          PathDataContainer.SaveData(deserializedData);
         }
         catch(YamlException)
         {
