@@ -9,8 +9,12 @@ namespace PathCreation.Examples
         public PathCreator pathCreator;
         public EndOfPathInstruction endOfPathInstruction;
         public float speed = 1;
-        public float pct = 0;
+        float pct = 0;
 
+        public float percentage {
+            get => pct % 1;
+            set => pct = value;
+        }
 
         void Start() { }
 
